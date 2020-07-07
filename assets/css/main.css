@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+html, body
+{
+  background-color: #fff;
+  color: #2e2f30;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.page-enter-active, .page-leave-active
+{
+  transition: opacity .5s
+}
+.page-enter, .page-leave-active
+{
+  opacity: 0
+}
