@@ -9,21 +9,19 @@
     </div>
     <div class="hot-search">
       <div class="hot-title">
-        <img src="../assets/img/img_title.png" alt="" class="icon-re
-        ">
+        <img src="../assets/img/img_title.png" alt="" class="icon-re">
         <p>每分钟更新一次</p>
       </div>
-      <div class="hot-content">
-        <span class="order">1</span>
-        <span class="hot-detail">辟谣中国送印度大米</span>
+      <div class="hot-content" v-for="(item, idx) in hotList" :key="idx">
+        <span class="order" :class="{'orderRed': item.numRed}">{{item.num}}</span>
+        <span class="hot-detail">{{item.content}}</span>
         <div class="icon-warpper">
-          <img src="../assets/img/icon_xin.png" alt="" class="hot-icon">
+          <img src="../assets/img/icon_re.png" alt="" class="hot-icon" v-if="item.hot">
+          <img src="../assets/img/icon_xin.png" alt="" class="hot-icon" v-if="item.new">
         </div>
-        <span class="nums">480.1万</span>
+        <span class="nums">{{item.heat}}万</span>
       </div>
     </div>
-    <div @click="getdata1" class="data1">1</div>
-    <div @click="getdata2" class="data1">2</div>
   </section>
 </template>
 
@@ -35,19 +33,16 @@ export default {
   },
   data() {
     return {
-
+      hotList: []
     }
   },
-  methods: {
-    getdata1() {
-      return axios.get('https://i.snssdk.com/search/api/study/', {
-        params: {
-          keyword: '前端'
-        }
-      }).then(res => {
-        console.log(res)
-      })
-    } 
+  async asyncData() {
+    let {status, data: {hotList}} = await axios.get('http://localhost:3000/hotSearch/hotList/')
+    if (status === 200) {
+      return {
+        hotList
+      }
+    }
   }
 }
 </script>
@@ -58,7 +53,8 @@ export default {
     margin: 0 auto;
     text-align: center;
     padding-top: 100px;
-    .logo-wrapper {
+    padding-bottom: 30px;
+    .logo {
       width: 130px;
       height: 54px;
       margin: 30px auto;
@@ -101,8 +97,12 @@ export default {
         border-bottom: 1px solid #d8d7d7;
         .order {
           float: left;
+          font-size: 14px;
           padding: 0 2px;
-          color: #f04142;
+          color: #9b9b9b;
+          &.orderRed {
+            color: #f04142;
+          }
         }
         .hot-detail {
           float: left;

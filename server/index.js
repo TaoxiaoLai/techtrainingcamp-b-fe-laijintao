@@ -1,5 +1,6 @@
 import Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
+import hotSearch from './interface/hotSearch'
 
 async function start () {
   const app = new Koa()
@@ -18,7 +19,7 @@ async function start () {
     const builder = new Builder(nuxt)
     await builder.build()
   }
-
+  app.use(hotSearch.routes()).use(hotSearch.allowedMethods())
   app.use(ctx => {
     ctx.status = 200
     ctx.respond = false // Mark request as handled for Koa
