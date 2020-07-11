@@ -3,10 +3,12 @@
     <div class="logo-wrapper">
       <img src="../assets/img/logo.png" alt="" class="logo" />
     </div>
-    <div class="search">
+    <nuxt-link to="/search">
+      <div class="search">
       <div class="placehoder">搜你想看</div>
       <img src="../assets/img/search.png" alt="" class="search-img">
     </div>
+    </nuxt-link>
     <div class="hot-search">
       <div class="hot-title">
         <img src="../assets/img/img_title.png" alt="" class="icon-re">
@@ -61,7 +63,7 @@ export default {
     }
     .search {
       height: 52px;
-      border: 1px solid;
+      border: 1px solid #161616;
       padding: 0 18px;
       display: flex;
       justify-content: space-between;

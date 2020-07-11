@@ -5,6 +5,10 @@
   list-style: none;
 }
 
+a {
+  text-decoration: none;
+}
+
 html, body
 {
   background-color: #fff;

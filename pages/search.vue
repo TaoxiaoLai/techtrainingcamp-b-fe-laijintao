@@ -1,15 +1,38 @@
 <template>
   <section class="container">
     <div class="search-head">
-      <img src="../assets/img/arrow-left.png" alt="" class="back-img">
+      <nuxt-link to="/">
+        <img src="../assets/img/arrow-left.png" alt="" class="back-img">
+      </nuxt-link>
       <div class="input-wrapper">
         <img src="../assets/img/search.png" alt="" class="search-img">
-        <input type="text" placeholder="请输入搜索内容" class="input">
-        <img src="../assets/img/del.png" alt="" class="del-img">
-        <p class="search">搜索</p>
+        <input
+          type="text"
+          placeholder="请输入搜索内容"
+          class="input"
+          v-model="keyword"
+          >
+        <img src="../assets/img/del.png" alt="" class="del-img" @click="clearKeyword()">
+        <p class="search" @click="getContentList()">搜索</p>
       </div>
     </div>
-    <div class="nav-bar">
+    <!-- <div class="search-history">
+      <p>历史记录</p>
+      <div></div>
+    </div> -->
+    <div class="search-list" v-show="showSearchList">
+      <div
+        class="search-item-wrapper"
+        v-for="(item, idx) in searchList"
+        :key="idx"
+        @click="getContentList(item.keyword)">
+        <img src="../assets/img/search.png" alt="" class="search-img">
+        <div class="search-item">
+          {{item.keyword}}
+        </div>
+      </div>
+    </div>
+    <div class="nav-bar" v-show="showContent">
       <ul>
         <li class="item">综合</li>
         <li class="item">视频</li>
@@ -21,8 +44,8 @@
         <li class="item">微头条</li>
       </ul>
     </div>
-    <div class="search-content">
-      <div class="content-wrapper" v-for="(item, idx) in list" :key="idx">
+    <div class="search-content" v-show="showContent">
+      <div class="content-wrapper" v-for="(item, idx) in contentList" :key="idx">
         <div class="title">{{item.title}}</div>
         <div class="description">{{item.description}}</div>
         <div class="relation">
@@ -43,23 +66,62 @@ export default {
   },
   data() {
     return {
-      isFixed: false,
-      list: []
+      keyword: '',
+      timer: null,
+      searchList: [],
+      contentList: [],
+      showSearchList: true,
+      showContent: false,
+      isCurrent: false
     }
   },
-  mounted() {
-    this.getdata1()
+  watch: {
+    keyword() {
+      if (!this.keyword) {
+        this.showSearchList = true
+        this.showContent = false
+      }
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(() => {
+        this.getSearchList()
+      })
+    }
   },
   methods: {
-    getdata1() {
-      let that = this
-      return axios.get('https://i.snssdk.com/search/api/study/', {
+    clearKeyword() {
+      this.keyword = ''
+      this.showSearchList = true
+      this.showContent = false
+    },
+    getSearchList() {
+      return axios.get('https://i.snssdk.com/search/api/sug/', {
         params: {
-          keyword: '前端'
+          keyword: this.keyword
         }
       }).then(res => {
-        console.log(res)
-        that.list = res.data.data
+        this.searchList = res.data.data
+      })
+    },
+    getContentList(keyword) {
+      if (!keyword) {
+        if (this.keyword) {
+          keyword = this.keyword
+        } else {
+          return
+        }
+      }
+      return axios.get('https://i.snssdk.com/search/api/study/', {
+        params: {
+          keyword
+        }
+      }).then(res => {
+        this.showSearchList = false
+        this.showContent = true
+        this.keyword = keyword
+        this.searchList = []
+        this.contentList = res.data.data
       })
     }
   }
@@ -122,6 +184,31 @@ export default {
         }
       }
     }
+    .search-list {
+      width: 100%;
+      margin-top: 60px;
+      .search-item-wrapper {
+        width: 100%;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #e6e3e3;
+        .search-img {
+          flex: 1;
+          width: 16px;
+          height: 16px;
+          margin: 0 8px;
+        }
+        .search-item {
+          flex: 19;
+          font-size: 17px;
+          color: #999;
+          white-space: nowrap;  // 不换行
+          text-overflow: ellipsis;  // 显示省略号
+          overflow: hidden;
+        }
+      }
+    }
     .nav-bar {
       width: 100%;
       height: 39px;
@@ -137,13 +224,17 @@ export default {
           text-align: center;
           height: 44px;
           line-height: 44px;
-          padding: 0 10px;
-          font-size: 18px;
+          &.uncurrentItem {
+            padding: 0 10px;
+            font-size: 18px;
+          }
+          &.currentItem {
+            font-size: 22px;
+            color: #e73e3e;
+          }
         }
         :first-child {
           padding-left: 15px;
-          font-size: 22px;
-          color: #e73e3e;
         }
       }
     }
