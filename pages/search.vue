@@ -13,13 +13,10 @@
           v-model="keyword"
           >
         <img src="../assets/img/del.png" alt="" class="del-img" @click="clearKeyword()">
-        <p class="search" @click="getContentList()">搜索</p>
+        <p class="search" @click="getContentList(keyword)">搜索</p>
       </div>
     </div>
-    <!-- <div class="search-history">
-      <p>历史记录</p>
-      <div></div>
-    </div> -->
+    <search-history v-show="showHistory" @search="getContentList"/>
     <div class="search-list" v-show="showSearchList">
       <div
         class="search-item-wrapper"
@@ -32,18 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="nav-bar" v-show="showContent">
-      <ul>
-        <li class="item">综合</li>
-        <li class="item">视频</li>
-        <li class="item">资讯</li>
-        <li class="item">小视频</li>
-        <li class="item">图片</li>
-        <li class="item">音乐</li>
-        <li class="item">用户</li>
-        <li class="item">微头条</li>
-      </ul>
-    </div>
+    <nav-bar v-show="showContent"/>
     <div class="search-content" v-show="showContent">
       <div class="content-wrapper" v-for="(item, idx) in contentList" :key="idx">
         <div class="title">{{item.title}}</div>
@@ -51,7 +37,7 @@
         <div class="relation">
           <span>{{item.user_name}}</span>
           <span>{{item.comments_count}}条评论</span>
-          <span>2018年10月5日</span>
+          <span>{{item.create_time}}</span>
         </div>
       </div>
     </div>
@@ -59,10 +45,13 @@
 </template>
 
 <script>
+import SearchHistory from '../components/search/searchHistory'
+import NavBar from '../components/search/navBar'
 import axios from 'axios'
 export default {
   components: {
-
+    SearchHistory,
+    NavBar
   },
   data() {
     return {
@@ -70,6 +59,7 @@ export default {
       timer: null,
       searchList: [],
       contentList: [],
+      showHistory: true,
       showSearchList: true,
       showContent: false,
       isCurrent: false
@@ -78,6 +68,8 @@ export default {
   watch: {
     keyword() {
       if (!this.keyword) {
+        this.searchList = []
+        this.showHistory = true
         this.showSearchList = true
         this.showContent = false
       }
@@ -85,13 +77,17 @@ export default {
         clearTimeout(this.timer)
       }
       this.timer = setTimeout(() => {
-        this.getSearchList()
-      })
+        if (this.keyword) {
+          this.getSearchList()
+        }
+      }, 300)
     }
   },
   methods: {
     clearKeyword() {
       this.keyword = ''
+      this.searchList = []
+      this.showHistory = true
       this.showSearchList = true
       this.showContent = false
     },
@@ -101,10 +97,12 @@ export default {
           keyword: this.keyword
         }
       }).then(res => {
+        this.showHistory = false
         this.searchList = res.data.data
       })
     },
     getContentList(keyword) {
+      this.showHistory = false
       if (!keyword) {
         if (this.keyword) {
           keyword = this.keyword
@@ -122,7 +120,19 @@ export default {
         this.keyword = keyword
         this.searchList = []
         this.contentList = res.data.data
+        this.contentList.forEach(element => {
+          element.create_time = this.getRealDate(element.create_time)
+        })
       })
+    },
+    getRealDate(createTime) {
+      let realTime = ''
+      let time = new Date(createTime)
+      let year = time.getFullYear()
+      let month = time.getMonth()
+      let date = time.getDate()
+      realTime = `${year}年${month}月${date}日`
+      return realTime
     }
   }
 }
@@ -206,35 +216,6 @@ export default {
           white-space: nowrap;  // 不换行
           text-overflow: ellipsis;  // 显示省略号
           overflow: hidden;
-        }
-      }
-    }
-    .nav-bar {
-      width: 100%;
-      height: 39px;
-      margin-top: 55px;
-      overflow: hidden;
-      border-bottom: 1px solid #e6e3e3;
-      ul {
-        width: auto;
-        overflow-x: auto;
-        white-space: nowrap;
-        .item {
-          display: inline-block;
-          text-align: center;
-          height: 44px;
-          line-height: 44px;
-          &.uncurrentItem {
-            padding: 0 10px;
-            font-size: 18px;
-          }
-          &.currentItem {
-            font-size: 22px;
-            color: #e73e3e;
-          }
-        }
-        :first-child {
-          padding-left: 15px;
         }
       }
     }
