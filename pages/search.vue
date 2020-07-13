@@ -13,7 +13,7 @@
           v-model="keyword"
           >
         <img src="../assets/img/del.png" alt="" class="del-img" @click="clearKeyword()">
-        <p class="search" @click="currentIdx=0;getContentList(keyword)">搜索</p>
+        <p class="search" @click="currentIdx=0;getContentList(keyword,true)">搜索</p>
       </div>
     </div>
     <search-history v-show="showHistory" @search="getContentList"/>
@@ -30,13 +30,13 @@
       </div>
     </div>
     <div class="nav-bar" v-show="showContent">
-      <ul>
+      <ul id="ul">
         <li
           class="item"
           v-for="(item,idx) in navList"
           :key="idx"
           :class="{'currentItem': currentIdx==idx}"
-          @click="navSearch(idx)"
+          @click="navSearch(idx,item)"
         >{{item}}</li>
       </ul>
     </div>
@@ -75,10 +75,11 @@ export default {
         '综合',
         '视频',
         '资讯',
-        '小视频',
-        '图片',
+        '训练营',
+        '秋招',
         '音乐',
-        '用户',
+        '问答',
+        '直播',
         '微头条'
       ]
     }
@@ -86,6 +87,8 @@ export default {
   watch: {
     keyword() {
       if (!this.keyword) {
+        let ul = document.getElementById('ul')
+        ul.scrollLeft = 0
         this.currentIdx = 0
         this.searchList = []
         this.showHistory = true
@@ -104,6 +107,8 @@ export default {
   },
   methods: {
     clearKeyword() {
+      let ul = document.getElementById('ul')
+      ul.scrollLeft = 0
       this.currentIdx = 0
       this.keyword = ''
       this.searchList = []
@@ -121,7 +126,7 @@ export default {
         this.searchList = res.data.data
       })
     },
-    getContentList(keyword) {
+    getContentList(keyword, fromSearch) {
       this.showHistory = false
       if (!keyword) {
         if (this.keyword) {
@@ -130,6 +135,11 @@ export default {
           return
         }
       }
+      if (fromSearch) {
+        let ul = document.getElementById('ul')
+        ul.scrollLeft = 0
+      }
+      this.resetScrollTop()
       return axios.get('https://i.snssdk.com/search/api/study/', {
         params: {
           keyword
@@ -154,9 +164,35 @@ export default {
       realTime = `${year}年${month}月${date}日`
       return realTime
     },
-    navSearch(idx) {
+    navSearch(idx, navKeyword) {
+      let ul = document.getElementById('ul')
+      switch (idx) {
+        case 0: ul.scrollLeft = 0
+          break
+        case 1: ul.scrollLeft = 0
+          break
+        case 2: ul.scrollLeft = 0
+          break
+        case 3: ul.scrollLeft = 47
+          break
+        case 4: ul.scrollLeft = 94
+          break
+        case 5: ul.scrollLeft = 153
+          break
+        case 6: ul.scrollLeft = 188
+          break
+        case 7: ul.scrollLeft = 188
+          break
+        case 8: ul.scrollLeft = 188
+          break
+      }
       this.currentIdx = idx
-      this.getContentList()
+      this.getContentList(navKeyword)
+    },
+    resetScrollTop() {
+      window.pageYOffset = 0
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
     }
   }
 }
@@ -165,6 +201,7 @@ export default {
 <style lang="scss" scoped>
   .container {
     width: 100%;
+    overflow: hidden;
     .search-head {
       width: 100%;
       padding: 8px 0;
@@ -253,6 +290,7 @@ export default {
         width: auto;
         overflow-x: auto;
         white-space: nowrap;
+        transition: .3s;
         .item {
           display: inline-block;
           text-align: center;
