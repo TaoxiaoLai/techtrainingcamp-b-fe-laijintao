@@ -51,15 +51,18 @@
         </div>
       </div>
     </div>
+    <layout v-show="showLayout"/>
   </section>
 </template>
 
 <script>
-import SearchHistory from '../components/search/searchHistory'
+import SearchHistory from '../components/searchHistory'
+import Layout from '../components/layout'
 import axios from 'axios'
 export default {
   components: {
-    SearchHistory
+    SearchHistory,
+    Layout
   },
   data() {
     return {
@@ -70,6 +73,7 @@ export default {
       showHistory: true,
       showSearchList: true,
       showContent: false,
+      showLayout: true,
       currentIdx: 0,
       navList: [
         '综合',
@@ -187,14 +191,17 @@ export default {
           break
       }
       this.currentIdx = idx
-      this.getContentList(navKeyword)
+      // this.getContentList(navKeyword)
     },
     resetScrollTop() {
       window.pageYOffset = 0
       document.documentElement.scrollTop = 0
       document.body.scrollTop = 0
     },
-    scrollAnimate(ele, target) {
+    // nav-bar横向点击切换动画
+    scrollAnimate(ele, standTarget) {
+      let scrollWidth = document.body.scrollWidth
+      let target = scrollWidth * (standTarget / 375)  // 适配不同屏幕宽度
       clearInterval(ele.timer)
       ele.timer = setInterval(() => {
         let step = (target - ele.scrollLeft) / 10
@@ -303,7 +310,6 @@ export default {
         width: auto;
         overflow-x: auto;
         white-space: nowrap;
-        transition: .3s;
         .item {
           display: inline-block;
           text-align: center;
@@ -311,7 +317,7 @@ export default {
           line-height: 44px;
           padding: 0 10px;
           font-size: 18px;
-          transition: .3s;
+          transition: .4s;
           &.currentItem {
             font-size: 22px;
             color: #e73e3e;
