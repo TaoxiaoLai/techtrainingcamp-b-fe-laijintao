@@ -221,10 +221,14 @@ start();
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var koa_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! koa-router */ "koa-router");
 /* harmony import */ var koa_router__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(koa_router__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var https__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! https */ "https");
+/* harmony import */ var https__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(https__WEBPACK_IMPORTED_MODULE_1__);
+
 
 const router = new koa_router__WEBPACK_IMPORTED_MODULE_0___default.a({
   prefix: '/hotSearch'
-});
+}); // 首页热搜榜接口
+
 router.get('/hotList', async ctx => {
   ctx.body = {
     hotList: [{
@@ -287,8 +291,30 @@ router.get('/hotList', async ctx => {
       heat: '301.1'
     }]
   };
+}); // 关键词匹配接口
+
+router.get('/searchList', async ctx => {
+  const keyword = ctx.query.keyword || '';
+  return new Promise(resolve => {
+    const req = https__WEBPACK_IMPORTED_MODULE_1___default.a.get(`https://i.snssdk.com/search/api/sug/?keyword=${keyword}`, res => {
+      res.pipe(ctx.res);
+      res.on('end', resolve);
+    });
+    req.end;
+  });
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
+
+/***/ }),
+
+/***/ "https":
+/*!************************!*\
+  !*** external "https" ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("https");
 
 /***/ }),
 

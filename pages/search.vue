@@ -13,7 +13,7 @@
           v-model="keyword"
           >
         <img src="../assets/img/del.png" alt="" class="del-img" @click="clearKeyword()">
-        <p class="search" @click="getContentList(keyword)">搜索</p>
+        <p class="search" @click="currentIdx=0;getContentList(keyword)">搜索</p>
       </div>
     </div>
     <search-history v-show="showHistory" @search="getContentList"/>
@@ -29,7 +29,17 @@
         </div>
       </div>
     </div>
-    <nav-bar v-show="showContent"/>
+    <div class="nav-bar" v-show="showContent">
+      <ul>
+        <li
+          class="item"
+          v-for="(item,idx) in navList"
+          :key="idx"
+          :class="{'currentItem': currentIdx==idx}"
+          @click="navSearch(idx)"
+        >{{item}}</li>
+      </ul>
+    </div>
     <div class="search-content" v-show="showContent">
       <div class="content-wrapper" v-for="(item, idx) in contentList" :key="idx">
         <div class="title">{{item.title}}</div>
@@ -46,12 +56,10 @@
 
 <script>
 import SearchHistory from '../components/search/searchHistory'
-import NavBar from '../components/search/navBar'
 import axios from 'axios'
 export default {
   components: {
-    SearchHistory,
-    NavBar
+    SearchHistory
   },
   data() {
     return {
@@ -62,12 +70,23 @@ export default {
       showHistory: true,
       showSearchList: true,
       showContent: false,
-      isCurrent: false
+      currentIdx: 0,
+      navList: [
+        '综合',
+        '视频',
+        '资讯',
+        '小视频',
+        '图片',
+        '音乐',
+        '用户',
+        '微头条'
+      ]
     }
   },
   watch: {
     keyword() {
       if (!this.keyword) {
+        this.currentIdx = 0
         this.searchList = []
         this.showHistory = true
         this.showSearchList = true
@@ -85,6 +104,7 @@ export default {
   },
   methods: {
     clearKeyword() {
+      this.currentIdx = 0
       this.keyword = ''
       this.searchList = []
       this.showHistory = true
@@ -133,6 +153,10 @@ export default {
       let date = time.getDate()
       realTime = `${year}年${month}月${date}日`
       return realTime
+    },
+    navSearch(idx) {
+      this.currentIdx = idx
+      this.getContentList()
     }
   }
 }
@@ -219,6 +243,34 @@ export default {
         }
       }
     }
+    .nav-bar {
+      width: 100%;
+      height: 39px;
+      margin-top: 55px;
+      overflow: hidden;
+      border-bottom: 1px solid #e6e3e3;
+      ul {
+        width: auto;
+        overflow-x: auto;
+        white-space: nowrap;
+        .item {
+          display: inline-block;
+          text-align: center;
+          height: 44px;
+          line-height: 44px;
+          padding: 0 10px;
+          font-size: 18px;
+          transition: .3s;
+          &.currentItem {
+            font-size: 22px;
+            color: #e73e3e;
+          }
+        }
+        :first-child {
+          padding-left: 15px;
+        }
+      }
+    }
     .search-content {
       width: 100%;
       background-color: #e6e3e3;
@@ -254,5 +306,4 @@ export default {
       }
     }
   }
-
 </style>
