@@ -167,23 +167,23 @@ export default {
     navSearch(idx, navKeyword) {
       let ul = document.getElementById('ul')
       switch (idx) {
-        case 0: ul.scrollLeft = 0
+        case 0: this.scrollAnimate(ul, 0)
           break
-        case 1: ul.scrollLeft = 0
+        case 1: this.scrollAnimate(ul, 0)
           break
-        case 2: ul.scrollLeft = 0
+        case 2: this.scrollAnimate(ul, 0)
           break
-        case 3: ul.scrollLeft = 47
+        case 3: this.scrollAnimate(ul, 47)
           break
-        case 4: ul.scrollLeft = 94
+        case 4: this.scrollAnimate(ul, 94)
           break
-        case 5: ul.scrollLeft = 153
+        case 5: this.scrollAnimate(ul, 153)
           break
-        case 6: ul.scrollLeft = 188
+        case 6: this.scrollAnimate(ul, 188)
           break
-        case 7: ul.scrollLeft = 188
+        case 7: this.scrollAnimate(ul, 188)
           break
-        case 8: ul.scrollLeft = 188
+        case 8: this.scrollAnimate(ul, 188)
           break
       }
       this.currentIdx = idx
@@ -193,6 +193,19 @@ export default {
       window.pageYOffset = 0
       document.documentElement.scrollTop = 0
       document.body.scrollTop = 0
+    },
+    scrollAnimate(ele, target) {
+      clearInterval(ele.timer)
+      ele.timer = setInterval(() => {
+        let step = (target - ele.scrollLeft) / 10
+        step = step > 0 ? Math.ceil(step) : Math.floor(step)
+        if (Math.abs(target - ele.scrollLeft) <= Math.abs(step)) {
+          ele.scrollLeft = target
+          clearInterval(ele.timer)
+        } else {
+          ele.scrollLeft = ele.scrollLeft + step
+        }
+      }, 30)
     }
   }
 }
