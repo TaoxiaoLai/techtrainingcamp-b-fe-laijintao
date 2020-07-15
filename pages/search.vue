@@ -73,7 +73,7 @@ export default {
       showHistory: true,
       showSearchList: true,
       showContent: false,
-      showLayout: true,
+      showLayout: false,
       currentIdx: 0,
       navList: [
         '综合',
@@ -178,6 +178,10 @@ export default {
         case 2: this.scrollAnimate(ul, 0)
           break
         case 3: this.scrollAnimate(ul, 47)
+          this.showLayout = true
+          setTimeout(() => {
+            this.showLayout = false
+          }, 10000)
           break
         case 4: this.scrollAnimate(ul, 94)
           break
