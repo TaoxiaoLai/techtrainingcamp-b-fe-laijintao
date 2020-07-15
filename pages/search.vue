@@ -1,9 +1,9 @@
 <template>
   <section class="container">
     <div class="search-head">
-      <nuxt-link to="/">
+      <a href="http://127.0.0.1:3000/">
         <img src="../assets/img/arrow-left.png" alt="" class="back-img">
-      </nuxt-link>
+      </a>
       <div class="input-wrapper">
         <img src="../assets/img/search.png" alt="" class="search-img">
         <input
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="nav-bar" v-show="showContent">
+    <div class="nav-bar" v-if="showContent">
       <ul id="ul">
         <li
           class="item"
@@ -40,7 +40,7 @@
         >{{item}}</li>
       </ul>
     </div>
-    <div class="search-content" v-show="showContent">
+    <div class="search-content" v-if="showContent">
       <div class="content-wrapper" v-for="(item, idx) in contentList" :key="idx">
         <div class="title">{{item.title}}</div>
         <div class="description">{{item.description}}</div>
@@ -51,7 +51,7 @@
         </div>
       </div>
     </div>
-    <layout v-show="showLayout"/>
+    <layout v-if="showLayout"/>
   </section>
 </template>
 
@@ -178,10 +178,12 @@ export default {
         case 2: this.scrollAnimate(ul, 0)
           break
         case 3: this.scrollAnimate(ul, 47)
-          this.showLayout = true
+          setTimeout(() => {
+            this.showLayout = true
+          }, 600)
           setTimeout(() => {
             this.showLayout = false
-          }, 10000)
+          }, 11000)
           break
         case 4: this.scrollAnimate(ul, 94)
           break
@@ -235,9 +237,12 @@ export default {
       background: #ffffff;
       position: fixed;
       top: 0;
-      .back-img {
-        width: 30px;
-        height: 30px;
+      a {
+        display: inline-block;
+        .back-img {
+          width: 30px;
+          height: 30px;
+        }
       }
       .input-wrapper {
         display: flex;
@@ -349,12 +354,11 @@ export default {
         .description {
           font-size: 14px;
           color: #7e7d7d;
-          text-align: justify;
-          display:-webkit-box;
+          text-align: justify;   // 两端对齐
+          display:-webkit-box;  // 显示3行，多出来的省略号
           -webkit-line-clamp:3;
           -webkit-box-orient:vertical;
           overflow:hidden;
-
         }
         .relation {
           padding-top: 10px;

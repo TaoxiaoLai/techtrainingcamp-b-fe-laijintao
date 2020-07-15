@@ -3,12 +3,12 @@
     <div class="logo-wrapper">
       <img src="../assets/img/logo.png" alt="" class="logo" />
     </div>
-    <nuxt-link to="/search">
+    <a class="search-wrapper" href="http://127.0.0.1:3000/search">
       <div class="search">
-      <div class="placehoder">搜你想看</div>
-      <img src="../assets/img/search.png" alt="" class="search-img">
-    </div>
-    </nuxt-link>
+        <div class="placehoder">搜你想看</div>
+        <img src="../assets/img/search.png" alt="" class="search-img">
+      </div>
+    </a>
     <div class="hot-search">
       <div class="hot-title">
         <img src="../assets/img/img_title.png" alt="" class="icon-re">
@@ -61,20 +61,24 @@ export default {
       height: 54px;
       margin: 30px auto;
     }
-    .search {
-      height: 52px;
-      border: 1px solid #161616;
-      padding: 0 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .placehoder {
-        font-size: 18px;
-        color: #9b9b9b;
-      }
-      .search-img {
-        width: 24px;
-        height: 24px;
+    .search-wrapper {
+      display: inline-block;
+      width: 100%;
+      .search {
+        height: 52px;
+        border: 1px solid #161616;
+        padding: 0 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .placehoder {
+          font-size: 18px;
+          color: #9b9b9b;
+        }
+        .search-img {
+          width: 24px;
+          height: 24px;
+        }
       }
     }
     .hot-search {

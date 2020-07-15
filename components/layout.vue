@@ -8,7 +8,7 @@
     </div>
     <div class="animation-text">
       <h1 class="title slide-bar">Hellow World!</h1>
-      <p class="subtitle slide-bar">welcome to open the door to front-end world !</p>
+      <p class="subtitle slide-bar">welcome to open the door to the front-end world !</p>
     </div>
   </div>
 </template>
@@ -71,7 +71,7 @@ export default {
       background: url('../assets/img/bulb.png') no-repeat center;
       background-size: contain;
       transform: scale(0, 0);
-      animation: bulb 3s 1s ease-in-out forwards;
+      animation: bulb 3s ease-in-out forwards;
     }
   }
 
@@ -110,6 +110,7 @@ export default {
       margin: 10px 15px 0 15px;
       font-size: 20px;
       line-height: 30px;
+      text-align: justify;
       letter-spacing: 5px;
       text-transform: uppercase;
       animation-delay: 7.2s;
