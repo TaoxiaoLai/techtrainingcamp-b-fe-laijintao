@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-import https from 'https'
+// import https from 'https'
 
 const router = new Router({
   prefix: '/hotSearch'
@@ -69,15 +69,15 @@ router.get('/hotList', async (ctx) => {
   }
 })
 // 关键词匹配接口
-router.get('/searchList', async ctx => {
-  const keyword = ctx.query.keyword || ''
-  return new Promise(resolve => {
-    const req = https.get(`https://i.snssdk.com/search/api/sug/?keyword=${keyword}`, res => {
-      res.pipe(ctx.res)
-      res.on('end', resolve)
-    })
-    req.end
-  })
-})
+// router.get('/searchList', async ctx => {
+//   const keyword = ctx.query.keyword || ''
+//   return new Promise(resolve => {
+//     const req = https.get(`https://i.snssdk.com/search/api/sug/?keyword=${keyword}`, res => {
+//       res.pipe(ctx.res)
+//       res.on('end', resolve)
+//     })
+//     req.end
+//   })
+// })
 
 export default router

@@ -8,7 +8,7 @@
     </div>
     <div class="animation-text">
       <h1 class="title slide-bar">Hellow World!</h1>
-      <p class="subtitle slide-bar">welcome to open the door to the front-end world !</p>
+      <p class="subtitle slide-bar">欢迎来到玩转前端训练营！</p>
     </div>
   </div>
 </template>
@@ -46,7 +46,7 @@ export default {
       margin: -100px 0 0 -100px;
       background: url('../assets/img/circle_inner.png') no-repeat center;
       background-size: contain;
-      animation: circle_inner linear 8s infinite;
+      animation: circle_inner linear 10s;
     }
     .middle {
       width: 220px;
@@ -54,7 +54,7 @@ export default {
       margin: -110px 0 0 -110px;
       background: url('../assets/img/circle_inner.png') no-repeat center;
       background-size: contain;
-      animation: circle_middle linear 8s infinite;
+      animation: circle_middle linear 8s;
     }
     .outer {
       width: 360px;
@@ -62,7 +62,7 @@ export default {
       margin: -180px 0 0 -180px;
       background: url('../assets/img/circle_middle.png') no-repeat center;
       background-size: contain;
-      animation: circle_outer linear 10s infinite;
+      animation: circle_outer linear 10s;
     }
     .bulb {
       width: 150px;
@@ -71,7 +71,7 @@ export default {
       background: url('../assets/img/bulb.png') no-repeat center;
       background-size: contain;
       transform: scale(0, 0);
-      animation: bulb 3s ease-in-out forwards;
+      animation: bulb 3s .5s ease-in-out forwards;
     }
   }
 
@@ -108,11 +108,11 @@ export default {
     }
     .subtitle {
       margin: 10px 15px 0 15px;
-      font-size: 20px;
+      font-size: 22px;
       line-height: 30px;
       text-align: justify;
       letter-spacing: 5px;
-      text-transform: uppercase;
+      // text-transform: uppercase;
       animation-delay: 7.2s;
       &::before {
         background: #03A9F4;
@@ -122,16 +122,22 @@ export default {
   }
 
   @keyframes circle_inner {
-    from {transform: rotateX(0deg);}
-    to   {transform: rotateX(360deg);}
+    from {transform: rotateX(0deg); opacity: 0;}
+    5%   {transform: rotateX(0deg); opacity: 0;}
+    55%  {opacity: 1;}
+    to   {transform: rotateX(360deg); opacity: 1;}
   }
   @keyframes circle_middle {
-    from {transform: rotateY(0deg);}
-    to   {transform: rotateY(360deg);}
+    from {transform: rotateY(0deg); opacity: 0;}
+    5%   {transform: rotateY(0deg); opacity: 0;}
+    55%  {opacity: 1;}
+    to   {transform: rotateY(360deg); opacity: 1;}
   }
   @keyframes circle_outer {
-    from {transform: rotateZ(0deg);}
-    to   {transform: rotateZ(360deg);}
+    from {transform: rotateZ(0deg); opacity: 0;}
+    5%   {transform: rotateZ(0deg); opacity: 0;}
+    55%  {opacity: 1;}
+    to   {transform: rotateZ(360deg); opacity: 1;}
   }
   @keyframes bulb {
     from {transform: scale(0, 0);}

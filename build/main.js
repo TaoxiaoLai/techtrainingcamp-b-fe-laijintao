@@ -173,6 +173,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var nuxt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! nuxt */ "nuxt");
 /* harmony import */ var nuxt__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nuxt__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _interface_hotSearch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./interface/hotSearch */ "./server/interface/hotSearch.js");
+/* harmony import */ var _interface_search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./interface/search */ "./server/interface/search.js");
+
 
 
 
@@ -194,6 +196,7 @@ async function start() {
   }
 
   app.use(_interface_hotSearch__WEBPACK_IMPORTED_MODULE_2__["default"].routes()).use(_interface_hotSearch__WEBPACK_IMPORTED_MODULE_2__["default"].allowedMethods());
+  app.use(_interface_search__WEBPACK_IMPORTED_MODULE_3__["default"].routes()).use(_interface_search__WEBPACK_IMPORTED_MODULE_3__["default"].allowedMethods());
   app.use(ctx => {
     ctx.status = 200;
     ctx.respond = false; // Mark request as handled for Koa
@@ -221,9 +224,7 @@ start();
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var koa_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! koa-router */ "koa-router");
 /* harmony import */ var koa_router__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(koa_router__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var https__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! https */ "https");
-/* harmony import */ var https__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(https__WEBPACK_IMPORTED_MODULE_1__);
-
+ // import https from 'https'
 
 const router = new koa_router__WEBPACK_IMPORTED_MODULE_0___default.a({
   prefix: '/hotSearch'
@@ -292,29 +293,107 @@ router.get('/hotList', async ctx => {
     }]
   };
 }); // 关键词匹配接口
+// router.get('/searchList', async ctx => {
+//   const keyword = ctx.query.keyword || ''
+//   return new Promise(resolve => {
+//     const req = https.get(`https://i.snssdk.com/search/api/sug/?keyword=${keyword}`, res => {
+//       res.pipe(ctx.res)
+//       res.on('end', resolve)
+//     })
+//     req.end
+//   })
+// })
 
+/* harmony default export */ __webpack_exports__["default"] = (router);
+
+/***/ }),
+
+/***/ "./server/interface/search.js":
+/*!************************************!*\
+  !*** ./server/interface/search.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var koa_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! koa-router */ "koa-router");
+/* harmony import */ var koa_router__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(koa_router__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/axios */ "./server/interface/utils/axios.js");
+
+
+let router = new koa_router__WEBPACK_IMPORTED_MODULE_0___default.a({
+  prefix: '/search'
+});
 router.get('/searchList', async ctx => {
-  const keyword = ctx.query.keyword || '';
-  return new Promise(resolve => {
-    const req = https__WEBPACK_IMPORTED_MODULE_1___default.a.get(`https://i.snssdk.com/search/api/sug/?keyword=${keyword}`, res => {
-      res.pipe(ctx.res);
-      res.on('end', resolve);
-    });
-    req.end;
-  });
+  const keyword = encodeURI(ctx.query.keyword) || '';
+  let {
+    status,
+    data
+  } = await _utils_axios__WEBPACK_IMPORTED_MODULE_1__["default"].get(`https://i.snssdk.com/search/api/sug/?keyword=${keyword}`);
+
+  if (status === 200) {
+    ctx.body = {
+      data: data.data
+    };
+  } else {
+    ctx.body = {
+      data: {}
+    };
+  }
+});
+router.get('/searchContent', async ctx => {
+  const keyword = encodeURI(ctx.query.keyword) || '';
+  let {
+    status,
+    data
+  } = await _utils_axios__WEBPACK_IMPORTED_MODULE_1__["default"].get(`https://i.snssdk.com/search/api/study/?keyword=${keyword}`);
+
+  if (status === 200) {
+    ctx.body = {
+      data: data.data
+    };
+  } else {
+    ctx.body = {
+      data: {}
+    };
+  }
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
 
 /***/ }),
 
-/***/ "https":
+/***/ "./server/interface/utils/axios.js":
+/*!*****************************************!*\
+  !*** ./server/interface/utils/axios.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+const instance = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
+  baseURL: `http://${process.env.HOST || '127.0.0.1'}:${process.env.PORT || 3000}`,
+  timeout: 2000,
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+  }
+});
+/* harmony default export */ __webpack_exports__["default"] = (instance);
+
+/***/ }),
+
+/***/ "axios":
 /*!************************!*\
-  !*** external "https" ***!
+  !*** external "axios" ***!
   \************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = require("https");
+module.exports = require("axios");
 
 /***/ }),
 

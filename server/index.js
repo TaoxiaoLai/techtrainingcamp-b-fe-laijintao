@@ -1,6 +1,8 @@
 import Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
+
 import hotSearch from './interface/hotSearch'
+import search from './interface/search'
 
 async function start () {
   const app = new Koa()
@@ -20,6 +22,7 @@ async function start () {
     await builder.build()
   }
   app.use(hotSearch.routes()).use(hotSearch.allowedMethods())
+  app.use(search.routes()).use(search.allowedMethods())
   app.use(ctx => {
     ctx.status = 200
     ctx.respond = false // Mark request as handled for Koa

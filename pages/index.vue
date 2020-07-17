@@ -3,7 +3,7 @@
     <div class="logo-wrapper">
       <img src="../assets/img/logo.png" alt="" class="logo" />
     </div>
-    <a class="search-wrapper" href="http://127.0.0.1:3000/search">
+    <a class="search-wrapper" href="http://localhost:3000/search">
       <div class="search">
         <div class="placehoder">搜你想看</div>
         <img src="../assets/img/search.png" alt="" class="search-img">

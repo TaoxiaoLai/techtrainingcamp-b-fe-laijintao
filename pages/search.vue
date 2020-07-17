@@ -1,7 +1,7 @@
 <template>
   <section class="container">
     <div class="search-head">
-      <a href="http://127.0.0.1:3000/">
+      <a href="http://localhost:3000/">
         <img src="../assets/img/arrow-left.png" alt="" class="back-img">
       </a>
       <div class="input-wrapper">
@@ -13,7 +13,7 @@
           v-model="keyword"
           >
         <img src="../assets/img/del.png" alt="" class="del-img" @click="clearKeyword()">
-        <p class="search" @click="currentIdx=0;getContentList(keyword,true)">搜索</p>
+        <p class="search" @click="getContentList(keyword)">搜索</p>
       </div>
     </div>
     <search-history v-show="showHistory" @search="getContentList"/>
@@ -36,7 +36,7 @@
           v-for="(item,idx) in navList"
           :key="idx"
           :class="{'currentItem': currentIdx==idx}"
-          @click="navSearch(idx,item)"
+          @click="navChange (idx)"
         >{{item}}</li>
       </ul>
     </div>
@@ -51,7 +51,9 @@
         </div>
       </div>
     </div>
-    <layout v-if="showLayout"/>
+    <transition name="slide-fade">
+      <layout v-if="showLayout"/>
+    </transition>
   </section>
 </template>
 
@@ -91,8 +93,6 @@ export default {
   watch: {
     keyword() {
       if (!this.keyword) {
-        let ul = document.getElementById('ul')
-        ul.scrollLeft = 0
         this.currentIdx = 0
         this.searchList = []
         this.showHistory = true
@@ -111,8 +111,6 @@ export default {
   },
   methods: {
     clearKeyword() {
-      let ul = document.getElementById('ul')
-      ul.scrollLeft = 0
       this.currentIdx = 0
       this.keyword = ''
       this.searchList = []
@@ -121,7 +119,7 @@ export default {
       this.showContent = false
     },
     getSearchList() {
-      return axios.get('https://i.snssdk.com/search/api/sug/', {
+      return axios.get('http://localhost:3000/search/searchList/', {
         params: {
           keyword: this.keyword
         }
@@ -130,7 +128,7 @@ export default {
         this.searchList = res.data.data
       })
     },
-    getContentList(keyword, fromSearch) {
+    getContentList(keyword) {
       this.showHistory = false
       if (!keyword) {
         if (this.keyword) {
@@ -138,25 +136,26 @@ export default {
         } else {
           return
         }
-      }
-      if (fromSearch) {
-        let ul = document.getElementById('ul')
-        ul.scrollLeft = 0
+      } else {
+        this.keyword = keyword
       }
       this.resetScrollTop()
-      return axios.get('https://i.snssdk.com/search/api/study/', {
+      return axios.get(`http://localhost:3000/search/searchContent/`, {
         params: {
           keyword
         }
       }).then(res => {
         this.showSearchList = false
         this.showContent = true
-        this.keyword = keyword
         this.searchList = []
         this.contentList = res.data.data
         this.contentList.forEach(element => {
           element.create_time = this.getRealDate(element.create_time)
         })
+        if (this.currentIdx !== 0) {
+          this.currentIdx = 0
+          this.navChange(0)
+        }
       })
     },
     getRealDate(createTime) {
@@ -168,7 +167,7 @@ export default {
       realTime = `${year}年${month}月${date}日`
       return realTime
     },
-    navSearch(idx, navKeyword) {
+    navChange(idx) {
       let ul = document.getElementById('ul')
       switch (idx) {
         case 0: this.scrollAnimate(ul, 0)
@@ -183,7 +182,7 @@ export default {
           }, 600)
           setTimeout(() => {
             this.showLayout = false
-          }, 11000)
+          }, 12000)
           break
         case 4: this.scrollAnimate(ul, 94)
           break
@@ -197,7 +196,6 @@ export default {
           break
       }
       this.currentIdx = idx
-      // this.getContentList(navKeyword)
     },
     resetScrollTop() {
       window.pageYOffset = 0
@@ -369,6 +367,16 @@ export default {
           }
         }
       }
+    }
+    .slide-fade-enter-active {
+      transition: all .8s ease-in-out;
+    }
+    .slide-fade-leave-active {
+      transition: all .8s ease-in-out;
+    }
+    .slide-fade-enter, .slide-fade-leave-to {
+      transform: translate(-200px, -350px);
+      opacity: 0;
     }
   }
 </style>
