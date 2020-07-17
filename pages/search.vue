@@ -22,7 +22,7 @@
         class="search-item-wrapper"
         v-for="(item, idx) in searchList"
         :key="idx"
-        @click="getContentList(item.keyword)">
+        @click="getContentList(item.keyword, true)">
         <img src="../assets/img/search.png" alt="" class="search-img">
         <div class="search-item">
           {{item.keyword}}
@@ -76,6 +76,7 @@ export default {
       showSearchList: true,
       showContent: false,
       showLayout: false,
+      fromSearchList: false,
       currentIdx: 0,
       navList: [
         '综合',
@@ -98,12 +99,17 @@ export default {
         this.showHistory = true
         this.showSearchList = true
         this.showContent = false
+        this.fromSearchList = false  // 来自历史搜索及关键词匹配选择的优化
       }
       if (this.timer) {
         clearTimeout(this.timer)
       }
       this.timer = setTimeout(() => {
-        if (this.keyword) {
+        // if (this.keyword) {
+        //   this.getSearchList()
+        // }
+        // 优化后
+        if (this.keyword && !this.fromSearchList) {
           this.getSearchList()
         }
       }, 300)
@@ -117,6 +123,7 @@ export default {
       this.showHistory = true
       this.showSearchList = true
       this.showContent = false
+      this.fromSearchList = false  // 来自历史搜索及关键词匹配选择的优化
     },
     getSearchList() {
       return axios.get('http://localhost:3000/search/searchList/', {
@@ -128,8 +135,11 @@ export default {
         this.searchList = res.data.data
       })
     },
-    getContentList(keyword) {
+    getContentList(keyword, fromSearchList) {
       this.showHistory = false
+      if (fromSearchList) {
+        this.fromSearchList = true
+      }
       if (!keyword) {
         if (this.keyword) {
           keyword = this.keyword
@@ -149,6 +159,7 @@ export default {
         this.showContent = true
         this.searchList = []
         this.contentList = res.data.data
+        console.log(this.contentList)
         this.contentList.forEach(element => {
           element.create_time = this.getRealDate(element.create_time)
         })
@@ -240,6 +251,7 @@ export default {
         .back-img {
           width: 30px;
           height: 30px;
+          margin-top: 5px;
         }
       }
       .input-wrapper {

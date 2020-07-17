@@ -10,7 +10,8 @@ module.exports = {
       { hid: 'description', name: 'description', content: 'Nuxt.js project' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      // { rel: 'preconnect', href: 'http://localhost:3000/search/searchList/' },
+      // { rel: 'preconnect', href: 'http://localhost:3000/search/searchContent/' }
     ]
   },
   /*

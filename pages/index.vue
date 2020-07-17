@@ -1,12 +1,12 @@
 <template>
   <section class="container">
     <div class="logo-wrapper">
-      <img src="../assets/img/logo.png" alt="" class="logo" />
+      <img src="https://lf1-ttcdn-tos.pstatp.com/obj/card-system/HeadBar/dist_browser/images/logo-2x.a7b8b9c7.png" alt="" class="logo" />
     </div>
     <a class="search-wrapper" href="http://localhost:3000/search">
       <div class="search">
         <div class="placehoder">搜你想看</div>
-        <img src="../assets/img/search.png" alt="" class="search-img">
+        <img src="../assets/img/search.svg" alt="" class="search-img">
       </div>
     </a>
     <div class="hot-search">
@@ -88,7 +88,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         .icon-re {
-          width: 61px;
+          width: 56px;
           height: 16px;
         }
         p {
