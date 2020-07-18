@@ -53,7 +53,7 @@
     </div>
     <!-- transtion控制彩蛋动画渐影渐现 -->
     <transition name="slide-fade">
-      <mask-layer v-if="showLayout"/>
+      <mask-layer v-if="showLayer"/>
     </transition>
   </section>
 </template>
@@ -76,7 +76,7 @@ export default {
       showHistory: true,  // 是否显示历史搜索
       showSearchList: true, // 是否显示关键词匹配列表
       showContent: false,   // 是否显示搜索结果
-      showLayout: false,    // 是否显示彩蛋动画
+      showLayer: false,    // 是否显示彩蛋动画
       currentIdx: 0,    // nav-bar当前显示tab的id
       isSearch: true,   // 控制在显示搜索结果页面时改变keyword不触发获取关键词匹配列表
       navList: [        // nav-bar各个tab的显示内容列表
@@ -182,10 +182,10 @@ export default {
           break
         case 4: this.scrollAnimate(ul, 94)
           setTimeout(() => {
-            this.showLayout = true
+            this.showLayer = true
           }, 600)
           setTimeout(() => {
-            this.showLayout = false
+            this.showLayer = false
           }, 12000)
           break
         case 5: this.scrollAnimate(ul, 153)
