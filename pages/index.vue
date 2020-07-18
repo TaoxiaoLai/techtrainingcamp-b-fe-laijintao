@@ -3,12 +3,12 @@
     <div class="logo-wrapper">
       <img src="https://lf1-ttcdn-tos.pstatp.com/obj/card-system/HeadBar/dist_browser/images/logo-2x.a7b8b9c7.png" alt="" class="logo" />
     </div>
-    <a class="search-wrapper" href="http://localhost:3000/search">
+    <nuxt-link class="search-wrapper" to="/search">
       <div class="search">
         <div class="placehoder">搜你想看</div>
         <img src="../assets/img/search.svg" alt="" class="search-img">
       </div>
-    </a>
+    </nuxt-link>
     <div class="hot-search">
       <div class="hot-title">
         <div>
@@ -17,14 +17,22 @@
         </div>
         <p>每分钟更新一次</p>
       </div>
-      <div class="hot-content" v-for="(item, idx) in hotList" :key="idx">
-        <span class="order" :class="{'orderRed': item.numRed}">{{item.num}}</span>
-        <span class="hot-detail">{{item.content}}</span>
-        <div class="icon-warpper">
-          <img src="../assets/img/icon_re.png" alt="" class="hot-icon" v-if="item.hot">
-          <img src="../assets/img/icon_xin.png" alt="" class="hot-icon" v-if="item.new">
-        </div>
-        <span class="nums">{{item.heat}}万</span>
+      <div
+        class="hot-content"
+        v-for="(item, idx) in hotList"
+        :key="idx"
+      >
+        <nuxt-link
+          :to="{name: 'search', params: {keyword: item.content, fromHotList: true}}"
+        >
+          <span class="order" :class="{'orderRed': item.numRed}">{{item.num}}</span>
+          <span class="hot-detail">{{item.content}}</span>
+          <div class="icon-warpper">
+            <img src="../assets/img/icon_re.png" alt="" class="hot-icon" v-if="item.hot">
+            <img src="../assets/img/icon_xin.png" alt="" class="hot-icon" v-if="item.new">
+          </div>
+          <span class="nums">{{item.heat}}万</span>
+        </nuxt-link>
       </div>
     </div>
   </section>
@@ -109,6 +117,7 @@ export default {
         }
       }
       .hot-content {
+        display: block;
         height: 48px;
         line-height: 28px;
         padding: 10px 0;

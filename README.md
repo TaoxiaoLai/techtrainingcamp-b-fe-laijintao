@@ -1,6 +1,8 @@
-# re-headline-search
+# re-headline-search 复现移动端简易版头条搜索
 
-> Nuxt.js project
+## 项目简介
+
+本项目参考头条的头条搜索实现，
 
 ## Build Setup
 

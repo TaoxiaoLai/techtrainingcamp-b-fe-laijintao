@@ -1,9 +1,9 @@
 <template>
   <section class="container">
     <div class="search-head">
-      <a href="http://localhost:3000/">
+      <nuxt-link to="/">
         <img src="../assets/img/arrow.png" alt="" class="back-img">
-      </a>
+      </nuxt-link>
       <div class="input-wrapper">
         <img src="../assets/img/search.svg" alt="" class="search-img">
         <input
@@ -22,7 +22,7 @@
         class="search-item-wrapper"
         v-for="(item, idx) in searchList"
         :key="idx"
-        @click="getContentList(item.keyword, true)">
+        @click="getContentList(item.keyword)">
         <img src="../assets/img/search.svg" alt="" class="search-img">
         <div class="search-item">
           {{item.keyword}}
@@ -36,7 +36,7 @@
           v-for="(item,idx) in navList"
           :key="idx"
           :class="{'currentItem': currentIdx==idx}"
-          @click="navChange (idx)"
+          @click="navChange(idx)"
         >{{item}}</li>
       </ul>
     </div>
@@ -51,6 +51,7 @@
         </div>
       </div>
     </div>
+    <!-- transtion控制彩蛋动画渐影渐现 -->
     <transition name="slide-fade">
       <mask-layer v-if="showLayout"/>
     </transition>
@@ -68,17 +69,17 @@ export default {
   },
   data() {
     return {
-      keyword: '',
-      timer: null,
-      searchList: [],
-      contentList: [],
-      showHistory: true,
-      showSearchList: true,
-      showContent: false,
-      showLayout: false,
-      fromSearchList: false,
-      currentIdx: 0,
-      navList: [
+      keyword: this.$route.params.keyword || '',    // 搜索框关键词
+      fromHotList: this.$route.params.fromHotList || false,   // 是否来自首页热搜榜
+      searchList: [],   // 搜索关键词匹配列表
+      contentList: [],  // 搜索结果列表
+      showHistory: true,  // 是否显示历史搜索
+      showSearchList: true, // 是否显示关键词匹配列表
+      showContent: false,   // 是否显示搜索结果
+      showLayout: false,    // 是否显示彩蛋动画
+      currentIdx: 0,    // nav-bar当前显示tab的id
+      isSearch: true,   // 控制在显示搜索结果页面时改变keyword不触发获取关键词匹配列表
+      navList: [        // nav-bar各个tab的显示内容列表
         '综合',
         '视频',
         '资讯',
@@ -91,39 +92,32 @@ export default {
       ]
     }
   },
+  mounted() {
+    // 来自首页热榜时，触发获取搜索结果列表
+    if (this.fromHotList === true) {
+      this.getContentList()
+      this.fromHotList = false
+    }
+  },
   watch: {
     keyword() {
       if (!this.keyword) {
-        this.currentIdx = 0
-        this.searchList = []
-        this.showHistory = true
-        this.showSearchList = true
-        this.showContent = false
-        this.fromSearchList = false  // 来自历史搜索及关键词匹配选择的优化
+        this.resertIndex()
       }
-      if (this.timer) {
-        clearTimeout(this.timer)
-      }
-      this.timer = setTimeout(() => {  // 节流
-        // if (this.keyword) {
-        //   this.getSearchList()
-        // }
-        // 优化后
-        if (this.keyword && !this.fromSearchList) {
+      let timer = setTimeout(() => {  // 节流
+        // 在显示搜索结果的页面keyword改动不触发获取关键词匹配列表
+        if (this.keyword && this.isSearch) {
           this.getSearchList()
         }
       }, 300)
+      if (timer) {
+        clearTimeout(this.timer)
+      }
     }
   },
   methods: {
     clearKeyword() {
-      this.currentIdx = 0
       this.keyword = ''
-      this.searchList = []
-      this.showHistory = true
-      this.showSearchList = true
-      this.showContent = false
-      this.fromSearchList = false  // 来自历史搜索及关键词匹配选择的优化
     },
     getSearchList() {
       return axios.get('http://localhost:3000/search/searchList/', {
@@ -135,11 +129,9 @@ export default {
         this.searchList = res.data.data
       })
     },
-    getContentList(keyword, fromSearchList) {
+    getContentList(keyword) {
+      this.isSearch = false
       this.showHistory = false
-      if (fromSearchList) {
-        this.fromSearchList = true
-      }
       if (!keyword) {
         if (this.keyword) {
           keyword = this.keyword
@@ -159,7 +151,6 @@ export default {
         this.showContent = true
         this.searchList = []
         this.contentList = res.data.data
-        console.log(this.contentList)
         this.contentList.forEach(element => {
           element.create_time = this.getRealDate(element.create_time)
         })
@@ -207,6 +198,14 @@ export default {
           break
       }
       this.currentIdx = idx
+    },
+    resertIndex() {   // keyword清空时重置页面显示内容
+      this.currentIdx = 0
+      this.searchList = []
+      this.showHistory = true
+      this.showSearchList = true
+      this.showContent = false
+      this.isSearch = true
     },
     resetScrollTop() {
       window.pageYOffset = 0
@@ -388,7 +387,7 @@ export default {
       transition: all .8s ease-in-out;
     }
     .slide-fade-enter, .slide-fade-leave-to {
-      transform: translate(-200px, -350px);
+      transform: translate(0, 0);
       opacity: 0;
     }
   }

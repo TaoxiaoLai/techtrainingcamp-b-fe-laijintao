@@ -915,14 +915,9 @@ module.exports = {
       name: 'description',
       content: 'Nuxt.js project'
     }],
-    link: [{
-      rel: 'preLoad',
-      href: 'https://lf1-ttcdn-tos.pstatp.com/obj/card-system/HeadBar/dist_browser/images/logo-2x.a7b8b9c7.png'
-    }, // 首页图片预加载
+    link: [// { rel: 'preLoad', href: 'https://lf1-ttcdn-tos.pstatp.com/obj/card-system/HeadBar/dist_browser/images/logo-2x.a7b8b9c7.png' },  // 首页图片预加载
+    // { rel: 'preLoad', href: 'https://lf1-ttcdn-tos.pstatp.com/obj/card-system/HeadBar/dist_browser/images/icon_hot.40711151.png' },
     {
-      rel: 'preLoad',
-      href: 'https://lf1-ttcdn-tos.pstatp.com/obj/card-system/HeadBar/dist_browser/images/icon_hot.40711151.png'
-    }, {
       rel: 'shortcut icon',
       type: 'image/x-icon',
       href: '//s3a.pstatp.com/toutiao/resource/ntoutiao_web/static/image/favicon_5995b44.ico'
@@ -1038,7 +1033,6 @@ start();
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var koa_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! koa-router */ "koa-router");
 /* harmony import */ var koa_router__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(koa_router__WEBPACK_IMPORTED_MODULE_0__);
- // import https from 'https'
 
 const router = new koa_router__WEBPACK_IMPORTED_MODULE_0___default.a({
   prefix: '/hotSearch'

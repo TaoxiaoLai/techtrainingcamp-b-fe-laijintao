@@ -1,5 +1,4 @@
 import Router from 'koa-router'
-// import https from 'https'
 
 const router = new Router({
   prefix: '/hotSearch'

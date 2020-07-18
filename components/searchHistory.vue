@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     search(keyword) {
-      this.$emit('search', keyword, true) // 标识判断是否是来自历史搜索，若是来自历史搜索就不触发获取关键词列表
+      this.$emit('search', keyword) // 标识判断是否是来自历史搜索，若是来自历史搜索就不触发获取关键词列表
     }
   }
 }
