@@ -2,10 +2,10 @@
   <section class="container">
     <div class="search-head">
       <a href="http://localhost:3000/">
-        <img src="../assets/img/arrow-left.png" alt="" class="back-img">
+        <img src="../assets/img/arrow.png" alt="" class="back-img">
       </a>
       <div class="input-wrapper">
-        <img src="../assets/img/search.png" alt="" class="search-img">
+        <img src="../assets/img/search.svg" alt="" class="search-img">
         <input
           type="text"
           placeholder="请输入搜索内容"
@@ -23,7 +23,7 @@
         v-for="(item, idx) in searchList"
         :key="idx"
         @click="getContentList(item.keyword, true)">
-        <img src="../assets/img/search.png" alt="" class="search-img">
+        <img src="../assets/img/search.svg" alt="" class="search-img">
         <div class="search-item">
           {{item.keyword}}
         </div>
@@ -52,19 +52,19 @@
       </div>
     </div>
     <transition name="slide-fade">
-      <layout v-if="showLayout"/>
+      <mask-layer v-if="showLayout"/>
     </transition>
   </section>
 </template>
 
 <script>
 import SearchHistory from '../components/searchHistory'
-import Layout from '../components/layout'
+import MaskLayer from '../components/maskLayer'
 import axios from 'axios'
 export default {
   components: {
     SearchHistory,
-    Layout
+    MaskLayer
   },
   data() {
     return {
@@ -82,8 +82,8 @@ export default {
         '综合',
         '视频',
         '资讯',
+        '图片',
         '训练营',
-        '秋招',
         '音乐',
         '问答',
         '直播',
@@ -104,7 +104,7 @@ export default {
       if (this.timer) {
         clearTimeout(this.timer)
       }
-      this.timer = setTimeout(() => {
+      this.timer = setTimeout(() => {  // 节流
         // if (this.keyword) {
         //   this.getSearchList()
         // }
@@ -188,14 +188,14 @@ export default {
         case 2: this.scrollAnimate(ul, 0)
           break
         case 3: this.scrollAnimate(ul, 47)
+          break
+        case 4: this.scrollAnimate(ul, 94)
           setTimeout(() => {
             this.showLayout = true
           }, 600)
           setTimeout(() => {
             this.showLayout = false
           }, 12000)
-          break
-        case 4: this.scrollAnimate(ul, 94)
           break
         case 5: this.scrollAnimate(ul, 153)
           break
@@ -251,6 +251,7 @@ export default {
         .back-img {
           width: 30px;
           height: 30px;
+          transform: rotateZ(180deg);
           margin-top: 5px;
         }
       }
@@ -265,8 +266,8 @@ export default {
         border-radius: 5px;
         .search-img {
           flex: 1;
-          width: 24px;
-          height: 24px;
+          width: 20px;
+          height: 20px;
         }
         .input {
           flex: 9;

@@ -904,7 +904,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'starter',
+    title: '头条搜索',
     meta: [{
       charset: 'utf-8'
     }, {
@@ -915,8 +915,19 @@ module.exports = {
       name: 'description',
       content: 'Nuxt.js project'
     }],
-    link: [// { rel: 'preconnect', href: 'http://localhost:3000/search/searchList/' },
-      // { rel: 'preconnect', href: 'http://localhost:3000/search/searchContent/' }
+    link: [{
+      rel: 'preLoad',
+      href: 'https://lf1-ttcdn-tos.pstatp.com/obj/card-system/HeadBar/dist_browser/images/logo-2x.a7b8b9c7.png'
+    }, // 首页图片预加载
+    {
+      rel: 'preLoad',
+      href: 'https://lf1-ttcdn-tos.pstatp.com/obj/card-system/HeadBar/dist_browser/images/icon_hot.40711151.png'
+    }, {
+      rel: 'shortcut icon',
+      type: 'image/x-icon',
+      href: '//s3a.pstatp.com/toutiao/resource/ntoutiao_web/static/image/favicon_5995b44.ico'
+    } // { rel: 'preconnect', href: 'http://localhost:3000/search/searchList/' },
+    // { rel: 'preconnect', href: 'http://localhost:3000/search/searchContent/' }
     ]
   },
 
@@ -936,7 +947,8 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [// Doc: https://github.com/nuxt-community/axios-module#usage
-  '@nuxtjs/axios'],
+    // '@nuxtjs/axios'
+  ],
 
   /*
    ** Build configuration
@@ -1169,7 +1181,8 @@ router.get('/searchContent', async ctx => {
       data: {}
     };
   }
-}); // router.get('/searchContent', async (ctx) => {
+}); // 使用缓存
+// router.get('/searchContent', async (ctx) => {
 //   const keyword = ctx.query.keyword || ''
 //   let data
 //   if (CACHED.has(`"${keyword}"`)) {

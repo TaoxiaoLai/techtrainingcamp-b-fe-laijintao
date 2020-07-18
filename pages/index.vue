@@ -11,7 +11,10 @@
     </a>
     <div class="hot-search">
       <div class="hot-title">
-        <img src="../assets/img/img_title.png" alt="" class="icon-re">
+        <div>
+          <img src="https://lf1-ttcdn-tos.pstatp.com/obj/card-system/HeadBar/dist_browser/images/icon_hot.40711151.png" alt="" class="icon-hot">
+          <p>头条热榜</p>
+        </div>
         <p>每分钟更新一次</p>
       </div>
       <div class="hot-content" v-for="(item, idx) in hotList" :key="idx">
@@ -57,7 +60,7 @@ export default {
     padding-top: 100px;
     padding-bottom: 30px;
     .logo {
-      width: 130px;
+      width: 140px;
       height: 54px;
       margin: 30px auto;
     }
@@ -87,9 +90,18 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .icon-re {
-          width: 56px;
-          height: 16px;
+        div {
+          display: flex;
+          align-items: center;
+          p {
+            padding-left: 3px;
+            color: #161616;
+            font-size: 16px;
+          }
+          .icon-hot {
+            width: 20px;
+            height: 20px;
+          }
         }
         p {
           color: #999;

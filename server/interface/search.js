@@ -45,7 +45,7 @@ router.get('/searchContent', async (ctx) => {
   }
 })
 
-
+// 使用缓存
 // router.get('/searchContent', async (ctx) => {
 //   const keyword = ctx.query.keyword || ''
 //   let data
