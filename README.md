@@ -259,4 +259,57 @@ module.exports = {
 
 关于性能优化部分，主要是对页面中图片、icon图标的加载以及相关的代码逻辑进行了优化。
 
-对于页面中的图片，每张图片及icon图标的加载都是需要发送一次http请求，对性能进行优化，考虑的就是尽量减少请求的发送
+**页面中图片的优化**
+
+对于页面中的图片，每张图片及icon图标的加载都是需要发送一次http请求，对性能进行优化，考虑的就是尽量减少请求的发送。首先对于项目中的那些小图标，则可以使用Base64编码或者使用SVG图。虽然Base64编码之后，图片大小会膨胀为原来文件的4/3，但对于icon小图标，这些大小是可以忽略。其次，对于那些较大的图片，如首页logo图这种，不适合进行Base64编码的，则可以使用预加载方案。下面动图展示的便是优化前后页面刷新时的对比图。
+
+* 优化前
+![](/screenshot/图片优化前.gif)
+* 优化后
+![](/screenshot/图片优化后.gif)
+
+从上面的gif图可以看到，优化前，当页面刷新时，图片的显示会有明显的迟滞感，而优化后则好很多。我们也可以通过优化前后的network来看出区别。
+
+![](/screenshot/图片优化前.png)
+![](/screenshot/图片优化后.png)
+
+<br/>
+
+**代码逻辑的优化**
+
+* 搜索框匹配关键词时进行节流
+``` bash
+keyword() {
+  if (!this.keyword) {
+    this.resertIndex()
+  }
+  let timer
+  if (timer) {
+    clearTimeout(timer)
+  }
+  timer = setTimeout(() => {
+    // 在搜索结果页keyword改动不触发获取关键词匹配列表
+    if (this.keyword && this.isSearch) {
+      this.getSearchList()
+    }
+  }, 500)
+}
+```
+
+* 搜索结果页改变输入框搜索词不发送关键词匹配请求
+
+由于项目中是通过watch输入框里面的keywod触发匹配关键词的，而在搜索结果页面改变搜索词时，其也会被watch到，之后便会发送关键词匹配的请求，因此便在watch搜索框的keyword的时候加入一个判断，对于搜索结果页面的keyword改变不触发关键词匹配请求的发送，代码如上所示。优化前后的对比图如下：
+
+优化前
+![](/screenshot/搜索优化前.gif)
+
+优化后
+![](/screenshot/搜索优化后.gif)
+
+可以看到，在优化之前，改变搜索结果页搜索框的keyword时，其会发送关键词匹配的请求，而优化后则不会发送关键词匹配的请求。
+
+<br/>
+
+## 最后
+
+[本项目的GitHub仓库地址](https://github.com/TaoxiaoLai/headline-search)

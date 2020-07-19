@@ -9,6 +9,7 @@
         <input
           type="text"
           placeholder="请输入搜索内容"
+          autofocus="autofocus"
           class="input"
           v-model="keyword"
           >
