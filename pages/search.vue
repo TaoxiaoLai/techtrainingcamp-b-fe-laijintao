@@ -13,7 +13,7 @@
           v-model="keyword"
           >
         <img src="../assets/img/del.png" alt="" class="del-img" @click="clearKeyword()">
-        <p class="search" @click="getContentList(keyword)">搜索</p>
+        <p class="search" @click="getContentList(keyword, 0)">搜索</p>
       </div>
     </div>
     <search-history v-show="showHistory" @search="getContentList"/>
@@ -70,6 +70,7 @@ export default {
   data() {
     return {
       keyword: this.$route.params.keyword || '',    // 搜索框关键词
+      offset: 0,  // 搜索偏移量
       fromHotList: this.$route.params.fromHotList || false,   // 是否来自首页热搜榜
       searchList: [],   // 搜索关键词匹配列表
       contentList: [],  // 搜索结果列表
@@ -78,7 +79,7 @@ export default {
       showContent: false,   // 是否显示搜索结果
       showLayer: false,    // 是否显示彩蛋动画
       currentIdx: 0,    // nav-bar当前显示tab的id
-      isSearch: true,   // 控制在显示搜索结果页面时改变keyword不触发获取关键词匹配列表
+      isSearch: true,   // 控制搜索结果页改变keyword不触发获取关键词匹配列表
       navList: [        // nav-bar各个tab的显示内容列表
         '综合',
         '视频',
@@ -98,21 +99,24 @@ export default {
       this.getContentList()
       this.fromHotList = false
     }
+    // 监听滚动条事件，触底时加载更多搜索结果
+    window.addEventListener('scroll', this.touchBottomGetMore)
   },
   watch: {
     keyword() {
       if (!this.keyword) {
         this.resertIndex()
       }
-      let timer = setTimeout(() => {  // 节流
-        // 在显示搜索结果的页面keyword改动不触发获取关键词匹配列表
+      let timer
+      if (timer) {
+        clearTimeout(timer)
+      }
+      timer = setTimeout(() => {  // 节流
+        // 在搜索结果页keyword改动不触发获取关键词匹配列表
         if (this.keyword && this.isSearch) {
           this.getSearchList()
         }
       }, 300)
-      if (timer) {
-        clearTimeout(this.timer)
-      }
     }
   },
   methods: {
@@ -129,9 +133,14 @@ export default {
         this.searchList = res.data.data
       })
     },
-    getContentList(keyword) {
+    getContentList(keyword, offset = 0) {
       this.isSearch = false
       this.showHistory = false
+      if (offset === 0) {
+        this.offset = offset
+        this.contentList = []
+        this.resetScrollTop()
+      }
       if (!keyword) {
         if (this.keyword) {
           keyword = this.keyword
@@ -141,19 +150,19 @@ export default {
       } else {
         this.keyword = keyword
       }
-      this.resetScrollTop()
       return axios.get(`http://localhost:3000/search/searchContent/`, {
         params: {
-          keyword
+          keyword,
+          offset
         }
       }).then(res => {
         this.showSearchList = false
         this.showContent = true
         this.searchList = []
-        this.contentList = res.data.data
-        this.contentList.forEach(element => {
+        res.data.data.forEach(element => {
           element.create_time = this.getRealDate(element.create_time)
         })
+        this.contentList = this.contentList.concat(res.data.data)
         if (this.currentIdx !== 0) {
           this.currentIdx = 0
           this.navChange(0)
@@ -168,6 +177,21 @@ export default {
       let date = time.getDate()
       realTime = `${year}年${month}月${date}日`
       return realTime
+    },
+    // 滚动条触底加载更多内容
+    touchBottomGetMore() {
+      let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight  // 滚动条内容总高度
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop           // 滚动条到顶部的距离
+      let clientHeight = document.documentElement.clientHeight || document.body.clientHeight  // 当前页面可见区域的总高度
+      scrollHeight = Math.round(scrollHeight)
+      scrollTop = Math.round(scrollTop)
+      clientHeight = Math.round(clientHeight)
+      if (scrollHeight > clientHeight) {
+        if (scrollHeight === scrollTop + clientHeight) {
+          this.offset = this.offset + 1
+          this.getContentList(this.keyword, this.offset)
+        }
+      }
     },
     navChange(idx) {
       let ul = document.getElementById('ul')
@@ -199,19 +223,6 @@ export default {
       }
       this.currentIdx = idx
     },
-    resertIndex() {   // keyword清空时重置页面显示内容
-      this.currentIdx = 0
-      this.searchList = []
-      this.showHistory = true
-      this.showSearchList = true
-      this.showContent = false
-      this.isSearch = true
-    },
-    resetScrollTop() {
-      window.pageYOffset = 0
-      document.documentElement.scrollTop = 0
-      document.body.scrollTop = 0
-    },
     // nav-bar横向点击切换动画
     scrollAnimate(ele, standTarget) {
       let scrollWidth = document.body.scrollWidth
@@ -227,7 +238,25 @@ export default {
           ele.scrollLeft = ele.scrollLeft + step
         }
       }, 30)
+    },
+    resertIndex() {   // keyword清空时重置页面显示内容
+      this.currentIdx = 0
+      this.offset = 0
+      this.searchList = []
+      this.contentList = []
+      this.showHistory = true
+      this.showSearchList = true
+      this.showContent = false
+      this.isSearch = true
+    },
+    resetScrollTop() {
+      window.pageYOffset = 0
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
     }
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.touchBottomGetMore, false)
   }
 }
 </script>

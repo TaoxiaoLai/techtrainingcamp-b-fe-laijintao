@@ -1166,10 +1166,11 @@ router.get('/searchList', async ctx => {
 });
 router.get('/searchContent', async ctx => {
   const keyword = encodeURI(ctx.query.keyword) || '';
+  const offset = ctx.query.offset;
   let {
     status,
     data
-  } = await _utils_axios__WEBPACK_IMPORTED_MODULE_2__["default"].get(`https://i.snssdk.com/search/api/study/?keyword=${keyword}`);
+  } = await _utils_axios__WEBPACK_IMPORTED_MODULE_2__["default"].get(`https://i.snssdk.com/search/api/study/?keyword=${keyword}&offset=${offset}`);
 
   if (status === 200) {
     ctx.body = {

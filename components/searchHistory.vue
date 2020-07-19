@@ -19,11 +19,11 @@ export default {
     return {
       historyList: [
         '玩转前端训练营',
-        '字节跳动秋招启动',
-        '深入理解ES6',
+        '字节跳动面试',
+        'React从入门到精通',
         'ES6标准入门（第3版）',
         'JavaScript高级程序设计',
-        '图解HTTP协议'
+        'Vue 3.0 新特性'
       ]
     }
   },

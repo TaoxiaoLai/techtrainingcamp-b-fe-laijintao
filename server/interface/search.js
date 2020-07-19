@@ -30,10 +30,11 @@ router.get('/searchList', async (ctx) => {
 
 router.get('/searchContent', async (ctx) => {
   const keyword = encodeURI(ctx.query.keyword) || ''
+  const offset = ctx.query.offset
   let {
     status,
     data
-  } = await axios.get(`https://i.snssdk.com/search/api/study/?keyword=${keyword}`)
+  } = await axios.get(`https://i.snssdk.com/search/api/study/?keyword=${keyword}&offset=${offset}`)
   if (status === 200) {
     ctx.body = {
       data: data.data
