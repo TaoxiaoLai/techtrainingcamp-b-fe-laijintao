@@ -189,6 +189,8 @@ scrollAnimate(ele, standTarget) {   // ele是tab栏当前点击的元素，stand
 
 ![](/screenshot/历史搜索.gif)
 
+<br/>
+
 * **服务端koa接口转发**，在服务端，使用koa进行了接口转发，同时配置了相关的路由，其主要代码如下：
 ``` bash
 # 对关键词匹配接口的转发
@@ -301,9 +303,11 @@ keyword() {
 由于项目中是通过watch输入框里面的keywod触发匹配关键词的，而在搜索结果页面改变搜索词时，其也会被watch到，之后便会发送关键词匹配的请求，因此便在watch搜索框的keyword的时候加入一个判断，对于搜索结果页面的keyword改变不触发关键词匹配请求的发送，代码如上所示。优化前后的对比图如下：
 
 优化前
+
 ![](/screenshot/搜索优化前.gif)
 
 优化后
+
 ![](/screenshot/搜索优化后.gif)
 
 可以看到，在优化之前，改变搜索结果页搜索框的keyword时，其会发送关键词匹配的请求，而优化后则不会发送关键词匹配的请求。
@@ -312,4 +316,4 @@ keyword() {
 
 ## 最后
 
-[本项目的GitHub仓库地址](https://github.com/TaoxiaoLai/headline-search)
+[本项目的GitHub仓库地址](https://github.com/TaoxiaoLai/techtrainingcamp-b-fe-laijintao)
