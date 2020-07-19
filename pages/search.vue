@@ -116,7 +116,7 @@ export default {
         if (this.keyword && this.isSearch) {
           this.getSearchList()
         }
-      }, 300)
+      }, 500)
     }
   },
   methods: {
@@ -136,6 +136,10 @@ export default {
     getContentList(keyword, offset = 0) {
       this.isSearch = false
       this.showHistory = false
+      if (this.currentIdx !== 0) {
+        this.currentIdx = 0
+        this.navChange(0)
+      }
       if (offset === 0) {
         this.offset = offset
         this.contentList = []
@@ -163,10 +167,6 @@ export default {
           element.create_time = this.getRealDate(element.create_time)
         })
         this.contentList = this.contentList.concat(res.data.data)
-        if (this.currentIdx !== 0) {
-          this.currentIdx = 0
-          this.navChange(0)
-        }
       })
     },
     getRealDate(createTime) {
@@ -188,8 +188,10 @@ export default {
       clientHeight = Math.round(clientHeight)
       if (scrollHeight > clientHeight) {
         if (scrollHeight === scrollTop + clientHeight) {
-          this.offset = this.offset + 1
-          this.getContentList(this.keyword, this.offset)
+          setTimeout(() => {
+            this.offset = this.offset + 1
+            this.getContentList(this.keyword, this.offset)
+          }, 0)
         }
       }
     },

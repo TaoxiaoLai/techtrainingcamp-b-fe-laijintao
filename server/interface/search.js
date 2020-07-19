@@ -1,14 +1,9 @@
 import Router from 'koa-router'
-import LRU from 'lru-cache'
+// import LRU from 'lru-cache'
 import axios from './utils/axios'
 
 let router = new Router({
   prefix: '/search'
-})
-
-const CACHED = new LRU({
-  max: 100, // 缓存队列长度
-  maxAge: 1000 * 60 // 缓存时间
 })
 
 router.get('/searchList', async (ctx) => {
@@ -45,6 +40,14 @@ router.get('/searchContent', async (ctx) => {
     }
   }
 })
+
+
+
+
+// const CACHED = new LRU({
+//   max: 100, // 缓存队列长度
+//   maxAge: 1000 * 60 // 缓存时间
+// })
 
 // 使用缓存
 // router.get('/searchContent', async (ctx) => {
