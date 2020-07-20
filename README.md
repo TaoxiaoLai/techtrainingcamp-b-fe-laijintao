@@ -255,6 +255,10 @@ module.exports = {
   }
 }
 ```
+移动端适配效果演示如下：
+
+![](/screenshot/移动端适配.gif)
+
 <br/>
 
 ## 性能优化
