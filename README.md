@@ -125,7 +125,7 @@ async asyncData() {
 
 </br>
 
-* **输入搜索词实现搜索词条推荐**。在实现关键词推荐功能时，使用了nuxt里面的数据双向绑定，同时watch输入的keyword，当keyword改变时就触发获取关键词的方法，同时也使用了setTimeout对其进行了节流处理，控制其发送请求的频率。
+* **输入搜索词实现搜索词条推荐**。在实现关键词推荐功能时，使用了nuxt里面的数据双向绑定，同时watch输入的keyword，当keyword改变时就触发获取关键词的方法，同时也使用了setTimeout对其进行了防抖处理，控制其发送请求的频率。
 
 ![](/screenshot/搜索词推荐.gif)
 
@@ -283,7 +283,7 @@ module.exports = {
 
 **代码逻辑的优化**
 
-* 搜索框匹配关键词时进行节流
+* 搜索框匹配关键词时进行防抖处理
 ``` bash
 keyword() {
   if (!this.keyword) {

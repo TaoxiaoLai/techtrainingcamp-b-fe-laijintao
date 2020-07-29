@@ -112,7 +112,7 @@ export default {
       if (timer) {
         clearTimeout(timer)
       }
-      timer = setTimeout(() => {  // 节流
+      timer = setTimeout(() => {  // 防抖
         // 在搜索结果页keyword改动不触发获取关键词匹配列表
         if (this.keyword && this.isSearch) {
           this.getSearchList()
@@ -359,7 +359,7 @@ export default {
       border-bottom: 1px solid #e6e3e3;
       ul {
         width: auto;
-        overflow-x: auto;
+        overflow-x: auto;  // 横向内容显示
         white-space: nowrap;
         .item {
           display: inline-block;
